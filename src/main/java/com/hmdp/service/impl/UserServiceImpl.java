@@ -34,6 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!RegexUtils.isCodeInvalid(phone)) {
             return Result.fail("手机号格式不正确");
         }
+
         //发送短信验证码
         String code = RandomUtil.randomNumbers(6);
         //save code to session
