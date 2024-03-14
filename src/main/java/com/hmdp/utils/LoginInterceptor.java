@@ -1,29 +1,21 @@
 package com.hmdp.utils;
 
 import com.hmdp.dto.UserDTO;
-import com.hmdp.entity.User;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-//            response.sendRedirect("/user/login");
+        // 1.获取请求url
+        UserDTO userDTO = UserHolder.getUser();
+        if (userDTO == null) {
             response.setStatus(401);
             return false;
         }
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setIcon(user.getIcon());
-        userDTO.setNickName(user.getNickName());
-        UserHolder.saveUser(userDTO);
         return true;
     }
 
