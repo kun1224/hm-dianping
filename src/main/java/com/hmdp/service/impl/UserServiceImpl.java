@@ -84,8 +84,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 CopyOptions.create()
                         .setIgnoreNullValue(true)
                         .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
-        log.info("userMap:{}", userMap.entrySet());
-        System.out.println(userMap.entrySet());
+//        log.info("userMap:{}", userMap.entrySet());
+//        System.out.println(userMap.entrySet());
 
         String jwtToken = JwtUtils.generateJwt(userMap);
         String key = RedisConstants.LOGIN_USER_KEY + jwtToken;
