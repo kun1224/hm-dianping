@@ -46,12 +46,12 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     public Result seckillVoucher(Long voucherId) {
 
         //使用redisson，不异步
-        //1.判断秒杀资格
+        //判断秒杀资格
         Result result = isVoucherAvailable(voucherId);
         if (!result.getSuccess()) {
             return result;
         }
-        //2.尝试获取锁
+        //尝试获取锁
         Long userId = UserHolder.getUser().getId();
 //        //使用synchronized单机锁，不异步
 //        synchronized (userId.toString().intern()) {
@@ -65,12 +65,12 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("不允许重复下单！");
         }
         try {
-            //3.生成订单
+            //生成订单
             VoucherOrderServiceImpl proxy = (VoucherOrderServiceImpl) AopContext.currentProxy();
-            //4.返回结果
+            //返回结果
             return proxy.createVoucherOrder(voucherId);
         } finally {
-            //5.释放锁
+            //释放锁
             lock.unlock();
         }
     }
