@@ -28,8 +28,6 @@ public class SecKillListener implements RocketMQListener<VoucherOrder> {
     @Resource
     private ISeckillVoucherService seckillVoucherService;
     @Resource
-    private RedisIdWorker redisIdWorker;
-    @Resource
     private IVoucherOrderService voucherOrderService;
     @Resource
     private RedissonClient redissonClient;
@@ -58,9 +56,6 @@ public class SecKillListener implements RocketMQListener<VoucherOrder> {
             // 扣减失败
             log.info(LocalDateTime.now()+"_"+userId+"_"+voucherId+"扣减库存失败");
         }
-        //  2.生成订单
-        long OrderId = redisIdWorker.nextId("voucher_order");
-        voucherOrder.setId(OrderId);
         voucherOrderService.save(voucherOrder);
     }
 }
