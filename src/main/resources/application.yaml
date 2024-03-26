@@ -25,3 +25,13 @@ mybatis-plus:
 logging:
   level:
     com.hmdp: debug
+
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: seckill-producer-group
+    access-key: rocketmq2
+    secret-key: 12345678
+  consumer:
+    access-key: rocketmq2
+    secret-key: 12345678
