@@ -50,6 +50,11 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             log.info("从redis中查询到了店铺信息:" + shop.getName());
             return Result.ok(shop);
         }
+        // 判断命中的是否是空值
+        if (json != null) {
+            // 返回一个错误信息
+            return Result.fail("店铺不存在");
+        }
         //4.不存在则查询数据库
         shop = getById(id);
         //5.判断是否存在
@@ -79,12 +84,23 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             //存在且不为空，则返回
             return Result.ok(JSONUtil.toBean(json, Shop.class));
         }
+        //判断缓存是否为空
         if (json != null) {//缓存存在，但为空值
             return Result.fail("店铺不存在");
         }
         //未命中，则尝试获取锁
         while (!tryLock(RedisConstants.LOCK_SHOP_KEY + id)) {
             try {
+                json = stringRedisTemplate.opsForValue().get(RedisConstants.CACHE_SHOP_KEY + id);
+                //是否命中
+                if (StrUtil.isNotBlank(json)) {
+                    //存在且不为空，则返回
+                    return Result.ok(JSONUtil.toBean(json, Shop.class));
+                }
+                //判断缓存是否为空
+                if (json != null) {//缓存存在，但为空值
+                    return Result.fail("店铺不存在");
+                }
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
