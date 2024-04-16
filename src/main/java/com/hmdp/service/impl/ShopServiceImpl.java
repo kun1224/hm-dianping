@@ -91,19 +91,19 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         //未命中，则尝试获取锁
         while (!tryLock(RedisConstants.LOCK_SHOP_KEY + id)) {
             try {
-                json = stringRedisTemplate.opsForValue().get(RedisConstants.CACHE_SHOP_KEY + id);
-                //是否命中
-                if (StrUtil.isNotBlank(json)) {
-                    //存在且不为空，则返回
-                    return Result.ok(JSONUtil.toBean(json, Shop.class));
-                }
-                //判断缓存是否为空
-                if (json != null) {//缓存存在，但为空值
-                    return Result.fail("店铺不存在");
-                }
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            json = stringRedisTemplate.opsForValue().get(RedisConstants.CACHE_SHOP_KEY + id);
+            //是否命中
+            if (StrUtil.isNotBlank(json)) {
+                //存在且不为空，则返回
+                return Result.ok(JSONUtil.toBean(json, Shop.class));
+            }
+            //判断缓存是否为空
+            if (json != null) {//缓存存在，但为空值
+                return Result.fail("店铺不存在");
             }
         }
         //获取锁成成功则rebuild
