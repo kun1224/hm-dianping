@@ -1,12 +1,9 @@
 package com.hmdp.listener;
 
-import com.hmdp.dto.Result;
 import com.hmdp.entity.VoucherOrder;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 import com.hmdp.utils.RedisConstants;
-import com.hmdp.utils.RedisIdWorker;
-import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;

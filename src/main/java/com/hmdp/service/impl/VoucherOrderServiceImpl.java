@@ -78,12 +78,12 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         rocketMQTemplate.asyncSend("voucher_seckill_topic", voucherOrder, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
-                System.out.println("发送成功");
+                System.out.println(voucherOrder.getVoucherId()+"发送成功");
             }
 
             @Override
             public void onException(Throwable throwable) {
-                System.out.println("发送失败:" + throwable.getMessage());
+                System.out.println(voucherOrder.getVoucherId()+"发送失败:" + throwable.getMessage());
             }
         });
         return Result.ok(orderId);
